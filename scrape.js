@@ -14,6 +14,7 @@ var client = new elasticsearch.Client({
 });
 
 async.waterfall([
+    
     // delete existing index
     function(callback) {
         client.indices.delete({
@@ -24,6 +25,7 @@ async.waterfall([
             callback(null);
         });
     },
+    
     // create index
     function(callback) {
         client.indices.create({
@@ -33,6 +35,7 @@ async.waterfall([
             callback(null);
         });
     },
+    
     // scrape the tournaments page
     function(callback) {
         request(url, function(error, response, html) {
@@ -66,6 +69,7 @@ async.waterfall([
             callback(null, tournaments);
         });
     },
+    
     // geocode the tournament location
     function(tournaments, callback) {
         async.each(tournaments, function(tournament, callback) {
@@ -87,6 +91,7 @@ async.waterfall([
             callback(err, tournaments);
         });
     },
+    
     // index the tournament
     function(tournaments, callback) {
         async.each(tournaments, function(tournament, callback) {
