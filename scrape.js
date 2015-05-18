@@ -9,12 +9,13 @@ var url = baseUrl + '/Tournaments/Schedule/SearchResults.aspx?Action=2&SectionDi
 var idRegex = /(\d)+\s*$/;
 
 var client = new elasticsearch.Client({
-    host: 'https://co29438y:6e3ic1vul8epug5u@olive-3946292.us-east-1.bonsai.io/',
+    host: process.env.BONSAI_URL,
     //log: 'trace'
 });
 
 async.waterfall([
-    function(callback) { // delete existing index
+    // delete existing index
+    function(callback) {
         client.indices.delete({
             index: 'usta',
             ignore: [404]
@@ -23,7 +24,8 @@ async.waterfall([
             callback(null);
         });
     },
-    function(callback) { // create index
+    // create index
+    function(callback) {
         client.indices.create({
             index: 'usta',
         }).then(function (body) {
@@ -31,7 +33,8 @@ async.waterfall([
             callback(null);
         });
     },
-    function(callback) { // scrape the tournaments page
+    // scrape the tournaments page
+    function(callback) {
         request(url, function(error, response, html) {
             if (error) {
                 callback(error);
@@ -63,7 +66,8 @@ async.waterfall([
             callback(null, tournaments);
         });
     },
-    function(tournaments, callback) { // geocode the tournament location
+    // geocode the tournament location
+    function(tournaments, callback) {
         async.each(tournaments, function(tournament, callback) {
             if (!tournament.location || tournament.location.length == 0) {
                 callback();
@@ -83,7 +87,8 @@ async.waterfall([
             callback(err, tournaments);
         });
     },
-    function(tournaments, callback) { // index the tournament
+    // index the tournament
+    function(tournaments, callback) {
         async.each(tournaments, function(tournament, callback) {
             client.index({
                 index: 'usta',
