@@ -1,0 +1,23 @@
+{
+	"version": "0.1.0",
+	"configurations": [
+		{
+			"name": "scrape.js",
+			"type": "node",
+			"program": "scrape.js",
+			"stopOnEntry": false,
+			"env": {
+				"BONSAI_URL": ""
+			},
+			"sourceMaps": false
+		},
+		{
+			"name": "server.js",
+			"type": "node",
+			"program": "server.js",
+			"stopOnEntry": false,
+			"env": {},
+			"sourceMaps": false
+		}
+	]
+}
